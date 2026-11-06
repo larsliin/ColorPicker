@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ColorPicker</title>
+    <style>
+      html:root,
+      html:root body,
+      html:root body #app {
+        height: auto;
+      }
+      body {
+        width: 460px;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: var(--color-bg, #1e1e1e);
+        color: var(--color-text, #e0e0e0);
+        overflow: hidden;
+      }
+      #app {
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

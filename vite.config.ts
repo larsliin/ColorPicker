@@ -1,18 +1,34 @@
-import { fileURLToPath, URL } from 'node:url'
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    plugins: [vue()],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src'),
+        },
     },
-  },
-})
+    server: {
+        port: 9001,
+    },
+    build: {
+        rollupOptions: {
+            input: {
+                popup: path.resolve(__dirname, 'popup.html'),
+                background: path.resolve(__dirname, 'src/extension/background.js'),
+                content: path.resolve(__dirname, 'src/extension/content.js'),
+            },
+            output: {
+                entryFileNames: '[name].js',
+                chunkFileNames: '[name].js',
+                assetFileNames: '[name].[ext]',
+            },
+        },
+        outDir: 'dist-extension',
+        emptyOutDir: true,
+    },
+});

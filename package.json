@@ -1,30 +1,35 @@
 {
   "name": "color-picker",
-  "version": "0.0.0",
   "private": true,
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build"
+    "type-check": "vue-tsc --build",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.vue",
+    "lint:fix": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.vue --fix",
+    "build:icons": "node scripts/convert-icons.js",
+    "build:favicon": "node scripts/generate-favicon.js",
+    "build:extension": "npm run type-check && npm run build:icons && npm run build:favicon && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.42"
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@tsconfig/node24": "^24.0.5",
-    "@types/node": "^24.13.4",
-    "@vitejs/plugin-vue": "^6.0.8",
-    "@vue/tsconfig": "^0.9.1",
-    "npm-run-all2": "^9.0.3",
-    "typescript": "~6.0.0",
-    "vite": "^8.2.2",
-    "vite-plugin-vue-devtools": "^8.2.1",
-    "vue-tsc": "^3.3.11"
-  },
-  "engines": {
-    "node": "^22.18.0 || >=24.12.0"
+    "@eslint/js": "^9.17.0",
+    "@stylistic/eslint-plugin": "^2.11.2",
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.10.1",
+    "@typescript-eslint/parser": "^8.16.0",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/tsconfig": "^0.5.1",
+    "eslint": "^9.17.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^15.14.0",
+    "sharp": "^0.35.5",
+    "typescript": "^5.7.2",
+    "vite": "^8.3.5",
+    "vue-tsc": "^2.2.0"
   }
 }
