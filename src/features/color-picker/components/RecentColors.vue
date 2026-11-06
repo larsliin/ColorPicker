@@ -12,8 +12,7 @@
 <template>
     <section class="recent-colors" aria-label="Recent colors">
         <h2>Recent colors</h2>
-        <p v-if="props.colors.length === 0" class="empty-history">No recent colors yet.</p>
-        <div v-else class="color-grid">
+        <div class="color-grid">
             <button
                 v-for="color in props.colors"
                 :key="color"
@@ -31,6 +30,12 @@
 </template>
 
 <style scoped>
+    .recent-colors {
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .recent-colors h2 {
         margin: 0 0 5px;
         color: var(--color-text-muted);
@@ -38,11 +43,6 @@
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-    }
-
-    .empty-history {
-        color: var(--color-text-muted);
-        font-size: 11px;
     }
 
     .color-grid {
