@@ -1,8 +1,5 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import ErrorIcon from 'bootstrap-icons/icons/exclamation-octagon-fill.svg?raw';
-    import WarningIcon from 'bootstrap-icons/icons/exclamation-triangle-fill.svg?raw';
-    import InfoIcon from 'bootstrap-icons/icons/info-circle-fill.svg?raw';
 
     const props = withDefaults(defineProps<{
         variant?: 'error' | 'warning' | 'info';
@@ -11,15 +8,31 @@
         variant: 'error',
     });
 
-    const ICONS = { error: ErrorIcon, warning: WarningIcon, info: InfoIcon };
-
-    const icon = computed(() => ICONS[props.variant]);
     const role = computed(() => (props.variant === 'error' ? 'alert' : 'status'));
 </script>
 
 <template>
     <div v-if="message" class="alert" :class="variant" :role="role">
-        <span class="alert-icon" aria-hidden="true" v-html="icon" />
+        <span class="alert-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path
+                    v-if="variant === 'error' || variant === 'warning'"
+                    d="M12 8v5m0 3h.01M10.3 3.8 2.9 17.1A2 2 0 0 0 4.6 20h14.8a2 2 0 0 0 1.7-2.9L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <path
+                    v-else
+                    d="M12 16v-4m0-4h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            </svg>
+        </span>
         <p class="message">{{ message }}</p>
     </div>
 </template>
@@ -43,7 +56,7 @@
         margin-top: 1px;
     }
 
-    .alert-icon :deep(svg) {
+    .alert-icon svg {
         width: 14px;
         height: 14px;
     }

@@ -1,18 +1,10 @@
 <script setup lang="ts">
     import { useTheme } from './composables/useTheme';
+    import ColorPickerPopup from './features/color-picker/ColorPickerPopup.vue';
 
     useTheme();
 </script>
 
 <template>
-    <main class="app">
-        <h1>ColorPicker</h1>
-        <p>Pick colors from any webpage.</p>
-    </main>
+    <ColorPickerPopup />
 </template>
-
-<style scoped>
-.app {
-    padding: 16px;
-}
-</style>

@@ -52,17 +52,16 @@
     margin: 0;
 }
 
-html,
-body,
-#app {
-    height: 100%;
-}
-
 body {
     /* Override the browser's injected extension-page typography. */
     font: inherit;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     -webkit-font-smoothing: antialiased;
+}
+
+#app {
+    overflow: visible;
 }
 
 button {

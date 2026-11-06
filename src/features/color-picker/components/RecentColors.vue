@@ -1,0 +1,93 @@
+<script setup lang="ts">
+    const props = defineProps<{
+        colors: readonly string[];
+        selectedColor: string;
+    }>();
+
+    const emit = defineEmits<{
+        select: [color: string];
+    }>();
+</script>
+
+<template>
+    <section class="recent-colors" aria-label="Recent colors">
+        <h2>Recent colors</h2>
+        <p v-if="props.colors.length === 0" class="empty-history">No recent colors yet.</p>
+        <div v-else class="color-grid">
+            <button
+                v-for="color in props.colors"
+                :key="color"
+                type="button"
+                class="color-swatch"
+                :class="{ selected: color === props.selectedColor }"
+                :style="{ backgroundColor: color }"
+                :aria-label="`Select color ${color}`"
+                :aria-pressed="color === props.selectedColor"
+                :title="`Select ${color}`"
+                @click="emit('select', color)"
+            ></button>
+        </div>
+    </section>
+</template>
+
+<style scoped>
+    .recent-colors h2 {
+        margin: 0 0 5px;
+        color: var(--color-text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .empty-history {
+        color: var(--color-text-muted);
+        font-size: 11px;
+    }
+
+    .color-grid {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .color-swatch {
+        position: relative;
+        min-width: 0;
+        width: 100%;
+        height: 34px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-button);
+        cursor: pointer;
+    }
+
+    .color-swatch:hover {
+        filter: brightness(1.12);
+    }
+
+    .color-swatch.selected {
+        border: 1px solid rgb(255 255 255 / 68%);
+        box-shadow:
+            0 0 0 1px rgb(0 0 0 / 14%),
+            0 1px 4px rgb(0 0 0 / 18%);
+    }
+
+    .color-swatch.selected::after {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        width: 10px;
+        height: 10px;
+        background: transparent;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px rgb(0 0 0 / 22%);
+        content: '';
+    }
+
+    .color-swatch:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+</style>
