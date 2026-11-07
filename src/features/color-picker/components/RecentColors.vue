@@ -33,9 +33,8 @@
 
 <style scoped>
     .recent-colors {
-        padding-top: 0;
-        padding-left: 0;
-        padding-right: 0;
+        padding-top: 10px;
+        border-top: 1px solid var(--color-border);
     }
 
     .recent-colors h2 {
