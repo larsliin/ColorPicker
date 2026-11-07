@@ -68,10 +68,10 @@
     }
 
     .color-swatch.selected {
-        border: 1px solid rgb(255 255 255 / 68%);
+        border: 1px solid var(--color-swatch-selected-border);
         box-shadow:
-            0 0 0 1px rgb(0 0 0 / 14%),
-            0 1px 4px rgb(0 0 0 / 18%);
+            0 0 0 1px var(--color-swatch-selected-ring),
+            0 1px 4px var(--color-shadow);
     }
 
     .color-swatch.selected::after {
@@ -81,9 +81,9 @@
         width: 10px;
         height: 10px;
         background: transparent;
-        border: 2px solid #fff;
+        border: 2px solid var(--color-white);
         border-radius: 50%;
-        box-shadow: 0 0 0 1px rgb(0 0 0 / 22%);
+        box-shadow: 0 0 0 1px var(--color-swatch-indicator-shadow);
         content: '';
     }
 

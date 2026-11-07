@@ -68,20 +68,20 @@
     }
 
     .alert.error {
-        color: #ef4444;
-        background: rgb(220 38 38 / 15%);
-        border: 1px solid rgb(220 38 38 / 30%);
+        color: var(--color-error);
+        background: var(--color-error-bg);
+        border: 1px solid var(--color-error-border);
     }
 
     .alert.warning {
-        color: #d97706;
-        background: rgb(217 119 6 / 15%);
-        border: 1px solid rgb(217 119 6 / 30%);
+        color: var(--color-warning);
+        background: var(--color-warning-bg);
+        border: 1px solid var(--color-warning-border);
     }
 
     .alert.info {
-        color: #60a5fa;
-        background: rgb(37 99 235 / 15%);
-        border: 1px solid rgb(37 99 235 / 30%);
+        color: var(--color-info);
+        background: var(--color-info-bg);
+        border: 1px solid var(--color-info-border);
     }
 </style>

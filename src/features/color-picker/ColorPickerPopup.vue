@@ -70,7 +70,7 @@
 
             <p class="visually-hidden" role="status" aria-live="polite">{{ statusMessage }}</p>
 
-            <div v-if="selectedColor" class="selection-layout">
+            <div class="selection-layout" :class="{ 'empty-state-layout': !selectedColor }">
                 <SelectedColor
                     :selected-color="selectedColor"
                     :copied-format="copiedFormat"
@@ -78,39 +78,26 @@
                     @copy="copyFormat('HEX', $event)"
                 />
 
-                <ColorFormatList
-                    :formats="secondaryFormats"
-                    :copied-format="copiedFormat"
-                    @copy="copyFormat($event.name, $event.value)"
-                />
+                <template v-if="selectedColor">
+                    <ColorFormatList
+                        :formats="secondaryFormats"
+                        :copied-format="copiedFormat"
+                        @copy="copyFormat($event.name, $event.value)"
+                    />
 
-                <ColorPaletteGenerator
-                    :selected-color="selectedColor"
-                    :copied-format="copiedFormat"
-                    @copy="copyFormat($event, $event)"
-                    @copy-all="copyFormat('Theme', $event)"
-                />
-
-                <RecentColors
-                    :colors="recentColors"
-                    :selected-color="selectedColor"
-                    @select="selectRecentColor"
-                />
-            </div>
-            <div v-else class="selection-layout empty-state-layout">
-                <SelectedColor
-                    :selected-color="selectedColor"
-                    :copied-format="copiedFormat"
-                    @select="selectColor"
-                    @copy="copyFormat('HEX', $event)"
-                />
-
-                <div class="empty-state">
+                    <ColorPaletteGenerator
+                        :selected-color="selectedColor"
+                        :copied-format="copiedFormat"
+                        @copy="copyFormat($event, $event)"
+                        @copy-all="copyFormat('Theme', $event)"
+                    />
+                </template>
+                <div v-else class="empty-state">
                     <p class="empty-state-message">Pick your first color to get started</p>
                 </div>
 
                 <RecentColors
-                    v-if="recentColors.length > 0"
+                    v-if="selectedColor || recentColors.length > 0"
                     :colors="recentColors"
                     :selected-color="selectedColor"
                     @select="selectRecentColor"
@@ -175,11 +162,16 @@
 
     .pick-button {
         --pick-surface:
-            linear-gradient(180deg, #218766 0%, #0c7252 48%, #086148 100%);
+            linear-gradient(
+                180deg,
+                var(--color-pick-gradient-start) 0%,
+                var(--color-pick-gradient-middle) 48%,
+                var(--color-pick-gradient-end) 100%
+            );
         --pick-shadow:
-            inset 0 1px 0 rgb(255 255 255 / 35%),
-            inset 0 -2px 3px rgb(0 40 28 / 18%),
-            0 2px 6px rgb(0 0 0 / 18%);
+            inset 0 1px 0 var(--color-pick-highlight),
+            inset 0 -2px 3px var(--color-pick-shadow-inset),
+            0 2px 6px var(--color-shadow);
 
         position: relative;
         width: 100%;
@@ -187,11 +179,11 @@
         justify-content: flex-start;
         gap: 14px;
         padding: 12px 16px;
-        color: #fff;
+        color: var(--color-white);
         text-align: left;
-        text-shadow: 0 1px 2px rgb(0 42 27 / 35%);
+        text-shadow: 0 1px 2px var(--color-pick-text-shadow);
         background: var(--pick-surface);
-        border: 1px solid #08664b;
+        border: 1px solid var(--color-pick-border);
         border-radius: 6px;
         box-shadow: var(--pick-shadow);
         transition: box-shadow 100ms ease-out, filter 100ms ease-out;
@@ -207,8 +199,8 @@
         height: 50%;
         background: linear-gradient(
             180deg,
-            rgb(255 255 255 / 32%) 0%,
-            rgb(255 255 255 / 18%) 85%,
+            var(--color-pick-gloss-start) 0%,
+            var(--color-pick-gloss-end) 85%,
             transparent 100%
         );
         border-radius: 6px 6px 0 0;
@@ -217,16 +209,16 @@
 
     .pick-button.pick-button:hover:not(:disabled) {
         background: var(--pick-surface);
-        border-color: #08664b;
+        border-color: var(--color-pick-border);
         filter: brightness(1.05);
     }
 
     .pick-button.pick-button:active:not(:disabled) {
         background: var(--pick-surface);
-        border-color: #08664b;
+        border-color: var(--color-pick-border);
         box-shadow:
-            inset 0 2px 5px rgb(0 40 28 / 30%),
-            inset 0 1px 0 rgb(255 255 255 / 20%);
+            inset 0 2px 5px var(--color-pick-shadow-active),
+            inset 0 1px 0 var(--color-pick-highlight-active);
         filter: brightness(0.94);
     }
 
@@ -240,12 +232,12 @@
     }
 
     .pick-button.pick-button.is-picking:disabled {
-        color: #fff;
+        color: var(--color-white);
         background: var(--pick-surface);
-        border-color: #08664b;
+        border-color: var(--color-pick-border);
         box-shadow: var(--pick-shadow);
         opacity: 1;
-        text-shadow: 0 1px 2px rgb(0 42 27 / 35%);
+        text-shadow: 0 1px 2px var(--color-pick-text-shadow);
     }
 
     .pick-button.pick-button:focus-visible {
@@ -265,8 +257,8 @@
         width: 48px;
         height: 48px;
         place-items: center;
-        background: rgb(255 255 255 / 12%);
-        border: 1px solid rgb(255 255 255 / 25%);
+        background: var(--color-pick-icon-bg);
+        border: 1px solid var(--color-pick-icon-border);
         border-radius: 14px;
     }
 
@@ -289,7 +281,7 @@
     }
 
     .pick-caption {
-        color: rgb(255 255 255 / 88%);
+        color: var(--color-pick-caption);
         font-size: 11px;
         font-weight: 500;
         line-height: 1.35;

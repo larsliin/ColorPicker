@@ -153,9 +153,9 @@
         width: 20px;
         height: 20px;
         place-items: center;
-        color: #fff;
-        background: rgb(0 0 0 / 52%);
-        border: 1px solid rgb(255 255 255 / 64%);
+        color: var(--color-white);
+        background: var(--color-edit-indicator-bg);
+        border: 1px solid var(--color-edit-indicator-border);
         border-radius: 6px;
         pointer-events: none;
     }

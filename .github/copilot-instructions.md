@@ -30,7 +30,8 @@ Keep the interface simple and focused. Do not add unrelated features unless expl
 ## Code style
 
 - 4-space indentation, single quotes, semicolons, trailing commas in multiline literals (enforced by ESLint)
-- Use CSS variables from `src/assets/main.css` for theming; support both light and dark mode (`data-theme` on `<html>`, handled by `useTheme`)
+- Define static UI colors as CSS custom properties on `:root` in `src/assets/main.css`, with overrides in `:root[data-theme='light']` where needed; use those variables in component styles. User-selected and generated colors may remain dynamic.
+- Support both light and dark mode (`data-theme` on `<html>`, handled by `useTheme`)
 - Add `aria-label`s and semantic HTML for accessibility
 - Use only Bootstrap Icons for UI icons; do not use emoji or icons from other libraries.
 

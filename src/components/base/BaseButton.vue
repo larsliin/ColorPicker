@@ -23,7 +23,7 @@
         align-items: center;
         gap: 6px;
         padding: 6px 12px;
-        color: #fff;
+        color: var(--color-white);
         font-size: 14px;
         font-weight: 500;
         background: var(--color-accent);
@@ -31,13 +31,13 @@
     }
 
     .base-button--primary:hover:not(:disabled) {
-        background: #15a86d;
-        border-color: #15a86d;
+        background: var(--color-accent-hover);
+        border-color: var(--color-accent-hover);
     }
 
     .base-button--primary:active:not(:disabled) {
-        background: #0f7d54;
-        border-color: #0f7d54;
+        background: var(--color-accent-active);
+        border-color: var(--color-accent-active);
     }
 
     .base-button--outline {

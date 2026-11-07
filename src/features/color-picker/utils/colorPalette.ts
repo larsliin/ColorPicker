@@ -6,7 +6,15 @@ interface HSL {
     l: number;
 }
 
-export type SchemeType = 'complementary' | 'analogous' | 'triadic' | 'tetradic' | 'split-complementary';
+export type SchemeMode =
+    | 'monochrome'
+    | 'monochrome-dark'
+    | 'monochrome-light'
+    | 'analogic'
+    | 'complement'
+    | 'analogic-complement'
+    | 'triad'
+    | 'quad';
 
 function hexToHsl(hex: string): HSL {
     const normalized = normalizeHexColor(hex);
@@ -42,13 +50,13 @@ function hexToHsl(hex: string): HSL {
         if (h < 0) h += 360;
     }
 
-    return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+    return { h, s: s * 100, l: l * 100 };
 }
 
 function hslToHex(h: number, s: number, l: number): string {
-    const hNorm = h / 360;
-    const sNorm = s / 100;
-    const lNorm = l / 100;
+    const hNorm = normalizeHue(h) / 360;
+    const sNorm = Math.min(100, Math.max(0, s)) / 100;
+    const lNorm = Math.min(100, Math.max(0, l)) / 100;
 
     const c = (1 - Math.abs(2 * lNorm - 1)) * sNorm;
     const hp = hNorm * 6;
@@ -83,66 +91,95 @@ function hslToHex(h: number, s: number, l: number): string {
     const gInt = Math.round((g + m) * 255);
     const bInt = Math.round((b + m) * 255);
 
-    const toHex = (n: number) => {
-        const hex = n.toString(16);
-        return hex.length === 1 ? `0${hex}` : hex;
-    };
+    const toHex = (channel: number) => Math.round(channel).toString(16).padStart(2, '0');
 
     return `#${toHex(rInt)}${toHex(gInt)}${toHex(bInt)}`.toUpperCase();
 }
 
 function normalizeHue(hue: number): number {
-    let normalized = hue % 360;
-    if (normalized < 0) normalized += 360;
-    return normalized;
+    return ((hue % 360) + 360) % 360;
 }
 
-export function generateColorScheme(baseHex: string, schemeType: SchemeType): string[] {
-    const hsl = hexToHsl(baseHex);
+interface ColorVariation {
+    hue: number;
+    saturation: number;
+    lightness: number;
+}
 
-    const colors: string[] = [baseHex];
+const schemeVariations: Record<Exclude<SchemeMode, 'monochrome' | 'monochrome-dark' | 'monochrome-light'>, ColorVariation[]> = {
+    analogic: [
+        { hue: 0, saturation: 0, lightness: 0 },
+        { hue: -30, saturation: 0, lightness: -8 },
+        { hue: -15, saturation: 5, lightness: 4 },
+        { hue: 15, saturation: -5, lightness: -4 },
+        { hue: 30, saturation: 0, lightness: 8 },
+    ],
+    complement: [
+        { hue: 0, saturation: 0, lightness: 0 },
+        { hue: 180, saturation: 0, lightness: 0 },
+        { hue: 150, saturation: -5, lightness: -8 },
+        { hue: 210, saturation: 5, lightness: 8 },
+        { hue: 180, saturation: -10, lightness: 12 },
+    ],
+    'analogic-complement': [
+        { hue: 0, saturation: 0, lightness: 0 },
+        { hue: -30, saturation: 0, lightness: -8 },
+        { hue: 30, saturation: 0, lightness: 8 },
+        { hue: 150, saturation: -5, lightness: -8 },
+        { hue: 180, saturation: 0, lightness: 0 },
+    ],
+    triad: [
+        { hue: 0, saturation: 0, lightness: 0 },
+        { hue: 120, saturation: 0, lightness: 0 },
+        { hue: 240, saturation: 0, lightness: 0 },
+        { hue: 120, saturation: -10, lightness: -12 },
+        { hue: 240, saturation: -10, lightness: 12 },
+    ],
+    quad: [
+        { hue: 0, saturation: 0, lightness: 0 },
+        { hue: 90, saturation: 0, lightness: 0 },
+        { hue: 180, saturation: 0, lightness: 0 },
+        { hue: 270, saturation: 0, lightness: 0 },
+        { hue: 90, saturation: -10, lightness: 12 },
+    ],
+};
 
-    switch (schemeType) {
-        case 'complementary': {
-            const complementaryHue = normalizeHue(hsl.h + 180);
-            colors.push(hslToHex(complementaryHue, hsl.s, hsl.l));
-            break;
-        }
+function clamp(value: number, minimum: number, maximum: number): number {
+    return Math.min(maximum, Math.max(minimum, value));
+}
 
-        case 'analogous': {
-            const analogous1 = normalizeHue(hsl.h + 30);
-            const analogous2 = normalizeHue(hsl.h - 30);
-            colors.push(hslToHex(analogous1, hsl.s, hsl.l));
-            colors.push(hslToHex(analogous2, hsl.s, hsl.l));
-            break;
-        }
-
-        case 'triadic': {
-            const triadic1 = normalizeHue(hsl.h + 120);
-            const triadic2 = normalizeHue(hsl.h + 240);
-            colors.push(hslToHex(triadic1, hsl.s, hsl.l));
-            colors.push(hslToHex(triadic2, hsl.s, hsl.l));
-            break;
-        }
-
-        case 'tetradic': {
-            const tetradic1 = normalizeHue(hsl.h + 90);
-            const tetradic2 = normalizeHue(hsl.h + 180);
-            const tetradic3 = normalizeHue(hsl.h + 270);
-            colors.push(hslToHex(tetradic1, hsl.s, hsl.l));
-            colors.push(hslToHex(tetradic2, hsl.s, hsl.l));
-            colors.push(hslToHex(tetradic3, hsl.s, hsl.l));
-            break;
-        }
-
-        case 'split-complementary': {
-            const split1 = normalizeHue(hsl.h + 150);
-            const split2 = normalizeHue(hsl.h + 210);
-            colors.push(hslToHex(split1, hsl.s, hsl.l));
-            colors.push(hslToHex(split2, hsl.s, hsl.l));
-            break;
-        }
+export function generateColorScheme(baseHex: string, mode: SchemeMode): string[] {
+    const normalizedHex = normalizeHexColor(baseHex);
+    if (!normalizedHex) {
+        throw new Error('Invalid hex color');
     }
 
-    return colors;
+    const base = hexToHsl(normalizedHex);
+
+    if (mode === 'monochrome' || mode === 'monochrome-dark' || mode === 'monochrome-light') {
+        const lightnessLevels = mode === 'monochrome'
+            ? [-24, -12, 0, 12, 24].map((offset) => clamp(base.l + offset, 8, 92))
+            : mode === 'monochrome-dark'
+                ? [12, 22, 32, 42, 52]
+                : [48, 58, 68, 78, 88];
+
+        return lightnessLevels.map((lightness, index) => (
+            mode === 'monochrome' && index === 2
+                ? normalizedHex
+                : hslToHex(base.h, base.s, lightness)
+        ));
+    }
+
+    const baseHue = base.s === 0 ? 210 : base.h;
+    const baseSaturation = base.s === 0 ? 65 : base.s;
+
+    return schemeVariations[mode].map(({ hue, saturation, lightness }, index) => (
+        index === 0
+            ? normalizedHex
+            : hslToHex(
+                baseHue + hue,
+                baseSaturation + saturation,
+                base.l + lightness,
+            )
+    ));
 }
