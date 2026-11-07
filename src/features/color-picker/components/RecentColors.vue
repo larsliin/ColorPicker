@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import BaseButton from '@/components/base/BaseButton.vue';
+
     const props = defineProps<{
         colors: readonly string[];
         selectedColor: string;
@@ -13,10 +15,10 @@
     <section class="recent-colors" aria-label="Recent colors">
         <h2>Recent colors</h2>
         <div class="color-grid">
-            <button
+            <BaseButton
                 v-for="color in props.colors"
                 :key="color"
-                type="button"
+                variant="bare"
                 class="color-swatch"
                 :class="{ selected: color === props.selectedColor }"
                 :style="{ backgroundColor: color }"
@@ -24,7 +26,7 @@
                 :aria-pressed="color === props.selectedColor"
                 :title="`Select ${color}`"
                 @click="emit('select', color)"
-            ></button>
+            />
         </div>
     </section>
 </template>

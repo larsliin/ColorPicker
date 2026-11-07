@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
+    import BaseButton from '@/components/base/BaseButton.vue';
 
     defineProps<{
         selectedColor: string;
@@ -77,9 +78,9 @@
                 <span class="selected-label">Current color · HEX</span>
                 <div class="selected-value-row">
                     <span class="selected-value" :class="{ 'is-empty': !selectedColor }">{{ selectedColor || 'No color selected' }}</span>
-                    <button
+                    <BaseButton
                         v-if="selectedColor"
-                        type="button"
+                        variant="outline"
                         class="hex-copy"
                         :aria-label="copiedFormat === 'HEX'
                             ? 'HEX value copied to clipboard'
@@ -87,7 +88,7 @@
                         @click="emit('copy', selectedColor)"
                     >
                         {{ copiedFormat === 'HEX' ? 'Copied' : 'Copy' }}
-                    </button>
+                    </BaseButton>
                 </div>
             </div>
         </div>
@@ -99,7 +100,7 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        padding: 12px;
+        padding: 10px;
         background: var(--color-editor-bg);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-button);
@@ -109,14 +110,14 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        min-height: 60px;
+        min-height: 52px;
     }
 
     .color-preview {
         position: relative;
-        flex: 0 0 60px;
-        width: 60px;
-        height: 60px;
+        flex: 0 0 52px;
+        width: 52px;
+        height: 52px;
         cursor: pointer;
     }
 
@@ -211,23 +212,5 @@
     .hex-copy {
         flex: 0 0 auto;
         width: 64px;
-        min-height: 32px;
-        padding: 5px 9px;
-        color: var(--color-accent);
-        font-size: 11px;
-        font-weight: 700;
-        background: transparent;
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-button);
-        cursor: pointer;
-    }
-
-    .hex-copy:hover {
-        background: var(--color-hover);
-    }
-
-    .hex-copy:focus-visible {
-        outline: 2px solid var(--color-focus);
-        outline-offset: 2px;
     }
 </style>

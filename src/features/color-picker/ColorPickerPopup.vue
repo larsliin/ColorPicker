@@ -3,6 +3,7 @@
     import BaseAlert from '@/components/base/BaseAlert.vue';
     import BaseButton from '@/components/base/BaseButton.vue';
     import ColorFormatList from './components/ColorFormatList.vue';
+    import ColorPaletteGenerator from './components/ColorPaletteGenerator.vue';
     import EyeDropperIcon from './components/EyeDropperIcon.vue';
     import RecentColors from './components/RecentColors.vue';
     import SelectedColor from './components/SelectedColor.vue';
@@ -77,16 +78,23 @@
                     @copy="copyFormat('HEX', $event)"
                 />
 
-                <RecentColors
-                    :colors="recentColors"
-                    :selected-color="selectedColor"
-                    @select="selectRecentColor"
-                />
-
                 <ColorFormatList
                     :formats="secondaryFormats"
                     :copied-format="copiedFormat"
                     @copy="copyFormat($event.name, $event.value)"
+                />
+
+                <ColorPaletteGenerator
+                    :selected-color="selectedColor"
+                    :copied-format="copiedFormat"
+                    @copy="copyFormat($event, $event)"
+                    @copy-all="copyFormat('Theme', $event)"
+                />
+
+                <RecentColors
+                    :colors="recentColors"
+                    :selected-color="selectedColor"
+                    @select="selectRecentColor"
                 />
             </div>
             <div v-else class="selection-layout empty-state-layout">
@@ -123,8 +131,8 @@
     .popup-header {
         display: flex;
         align-items: center;
-        margin: 12px 16px 0;
-        padding: 0 0 10px;
+        margin: 8px 16px 0;
+        padding: 0 0 8px;
         border-bottom: 1px solid var(--color-border);
     }
 
@@ -139,8 +147,8 @@
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        padding: 14px 16px;
+        gap: 8px;
+        padding: 12px 16px;
     }
 
     .empty-state {
@@ -162,7 +170,7 @@
     .selection-layout {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
 
     .pick-button {
@@ -175,7 +183,7 @@
 
         position: relative;
         width: 100%;
-        min-height: 82px;
+        min-height: 72px;
         justify-content: flex-start;
         gap: 14px;
         padding: 12px 16px;

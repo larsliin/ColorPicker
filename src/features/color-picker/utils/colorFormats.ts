@@ -9,6 +9,52 @@ export function normalizeHexColor(value: unknown): string | null {
     return /^[\da-f]{6}$/i.test(digits) ? `#${digits.toUpperCase()}` : null;
 }
 
+function getRelativeLuminance(hex: string): number {
+    const normalized = normalizeHexColor(hex);
+    if (!normalized) {
+        throw new Error('Invalid hex color');
+    }
+
+    const linearChannel = (offset: number) => {
+        const channel = Number.parseInt(normalized.slice(offset, offset + 2), 16) / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+    };
+
+    return 0.2126 * linearChannel(1) + 0.7152 * linearChannel(3) + 0.0722 * linearChannel(5);
+}
+
+export function getContrastColor(hex: string): string {
+    const normalized = normalizeHexColor(hex);
+    if (!normalized) {
+        throw new Error('Invalid hex color');
+    }
+
+    const luminance = getRelativeLuminance(normalized);
+    const minContrast = 4.5;
+    const useDark = (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05);
+    const base = useDark ? 0 : 255;
+    const channels = [1, 3, 5].map((offset) => Number.parseInt(normalized.slice(offset, offset + 2), 16));
+    const mix = (amount: number) => `#${channels.map((channel) => (
+        Math.round(base + (channel - base) * amount).toString(16).padStart(2, '0')
+    )).join('').toUpperCase()}`;
+
+    let low = 0;
+    let high = 0.45;
+    // Find the softest tinted color that still meets the text contrast target.
+    for (let i = 0; i < 12; i++) {
+        const midpoint = (low + high) / 2;
+        const foreground = getRelativeLuminance(mix(midpoint));
+        const contrast = useDark
+            ? (luminance + 0.05) / (foreground + 0.05)
+            : (foreground + 0.05) / (luminance + 0.05);
+
+        if (contrast >= minContrast) low = midpoint;
+        else high = midpoint;
+    }
+
+    return mix(low);
+}
+
 export function getColorFormats(hex: string): ColorFormat[] {
     const normalizedHex = normalizeHexColor(hex);
     if (!normalizedHex) {

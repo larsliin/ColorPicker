@@ -1,4 +1,5 @@
 <script setup lang="ts">
+    import BaseButton from '@/components/base/BaseButton.vue';
     import type { ColorFormat } from '../types';
 
     defineProps<{
@@ -15,10 +16,10 @@
     <section class="formats-section" aria-label="Color formats">
         <h2>Other formats</h2>
         <div class="format-list">
-            <button
+            <BaseButton
                 v-for="format in formats"
                 :key="format.name"
-                type="button"
+                variant="bare"
                 class="format-row"
                 :aria-label="copiedFormat === format.name
                     ? `${format.name} value copied to clipboard`
@@ -28,7 +29,7 @@
                 <span class="format-name">{{ format.name }}</span>
                 <span class="format-value">{{ format.value }}</span>
                 <span class="format-action">{{ copiedFormat === format.name ? 'Copied' : 'Copy' }}</span>
-            </button>
+            </BaseButton>
         </div>
     </section>
 </template>
@@ -61,7 +62,7 @@
         align-items: center;
         gap: 10px;
         min-width: 0;
-        min-height: 38px;
+        min-height: 34px;
         padding: 5px 8px;
         color: var(--color-text);
         text-align: left;

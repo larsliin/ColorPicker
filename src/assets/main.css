@@ -43,6 +43,7 @@
 body {
     /* Override the browser's injected extension-page typography. */
     font: inherit;
+    max-height: 600px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-font-smoothing: antialiased;

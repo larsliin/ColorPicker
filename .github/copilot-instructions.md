@@ -32,6 +32,7 @@ Keep the interface simple and focused. Do not add unrelated features unless expl
 - 4-space indentation, single quotes, semicolons, trailing commas in multiline literals (enforced by ESLint)
 - Use CSS variables from `src/assets/main.css` for theming; support both light and dark mode (`data-theme` on `<html>`, handled by `useTheme`)
 - Add `aria-label`s and semantic HTML for accessibility
+- Use only Bootstrap Icons for UI icons; do not use emoji or icons from other libraries.
 
 ## Chrome extension rules
 
