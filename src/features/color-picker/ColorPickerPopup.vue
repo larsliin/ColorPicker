@@ -173,6 +173,7 @@
             inset 0 -2px 3px rgb(0 40 28 / 18%),
             0 2px 6px rgb(0 0 0 / 18%);
 
+        position: relative;
         width: 100%;
         min-height: 82px;
         justify-content: flex-start;
@@ -186,6 +187,24 @@
         border-radius: 6px;
         box-shadow: var(--pick-shadow);
         transition: box-shadow 100ms ease-out, filter 100ms ease-out;
+        overflow: hidden;
+    }
+
+    .pick-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(
+            180deg,
+            rgb(255 255 255 / 32%) 0%,
+            rgb(255 255 255 / 18%) 85%,
+            transparent 100%
+        );
+        border-radius: 6px 6px 0 0;
+        pointer-events: none;
     }
 
     .pick-button.pick-button:hover:not(:disabled) {
