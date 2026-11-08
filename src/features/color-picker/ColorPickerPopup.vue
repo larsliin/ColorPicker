@@ -17,6 +17,7 @@
         formats,
         isEyeDropperAvailable,
         isPicking,
+        logPickInput,
         pickColor,
         recentColors,
         selectColor,
@@ -48,6 +49,9 @@
                 :disabled="isPicking || !isEyeDropperAvailable"
                 :aria-label="isPicking ? 'Picking a color from the screen' : 'Pick a color from the screen'"
                 :title="isPicking ? 'Picking color…' : 'Start screen-wide color picker'"
+                @pointerdown="logPickInput"
+                @mousedown="logPickInput"
+                @pointerup="logPickInput"
                 @click="pickColor"
             >
                 <span class="pick-icon" aria-hidden="true">
@@ -164,17 +168,20 @@
     }
 
     .pick-button {
+        --pick-surface-direction: 180deg;
         --pick-surface:
+            radial-gradient(ellipse 80% 55% at 50% 108%, var(--color-pick-bounce), transparent 80%),
             linear-gradient(
-                180deg,
+                var(--pick-surface-direction),
                 var(--color-pick-gradient-start) 0%,
                 var(--color-pick-gradient-middle) 48%,
                 var(--color-pick-gradient-end) 100%
             );
         --pick-shadow:
             inset 0 1px 0 var(--color-pick-highlight),
-            inset 0 -2px 3px var(--color-pick-shadow-inset),
-            0 2px 6px var(--color-shadow);
+            inset 0 -3px 0 var(--color-pick-shadow-active),
+            inset 1px 0 0 var(--color-pick-shadow-inset),
+            inset -1px 0 0 var(--color-pick-shadow-inset);
 
         position: relative;
         width: 100%;
@@ -196,17 +203,17 @@
     .pick-button::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
+        top: 2px;
+        right: 2px;
+        left: 2px;
+        height: 46%;
         background: linear-gradient(
             180deg,
             var(--color-pick-gloss-start) 0%,
-            var(--color-pick-gloss-end) 85%,
-            transparent 100%
+            var(--color-pick-gloss-end) 100%
         );
-        border-radius: 6px 6px 0 0;
+        border-radius: 4px 4px 50% 50% / 4px 4px 12px 12px;
+        box-shadow: inset 0 1px 0 var(--color-pick-gloss-start);
         pointer-events: none;
     }
 
@@ -217,18 +224,55 @@
     }
 
     .pick-button.pick-button:active:not(:disabled) {
+        --pick-surface-direction: 0deg;
+
         background: var(--pick-surface);
         border-color: var(--color-pick-border);
         box-shadow:
-            inset 0 2px 5px var(--color-pick-shadow-active),
-            inset 0 1px 0 var(--color-pick-highlight-active);
-        filter: brightness(0.94);
+            inset 0 1px 0 var(--color-pick-shadow-active),
+            inset 0 4px 8px var(--color-pick-shadow-active),
+            inset 0 -1px 0 var(--color-pick-highlight-active),
+            inset 1px 0 0 var(--color-pick-shadow-inset),
+            inset -1px 0 0 var(--color-pick-shadow-inset);
+        filter: brightness(0.96);
+    }
+
+    .pick-button:active:not(:disabled)::before {
+        top: auto;
+        bottom: 2px;
+        height: 30%;
+        background: linear-gradient(
+            0deg,
+            var(--color-pick-gloss-start) 0%,
+            var(--color-pick-gloss-end) 100%
+        );
+        border-radius: 50% 50% 4px 4px / 12px 12px 4px 4px;
+        box-shadow: inset 0 -1px 0 var(--color-pick-gloss-start);
+        opacity: 0.7;
+    }
+
+    .pick-button:active:not(:disabled) .pick-icon {
+        background-image: linear-gradient(0deg, var(--color-pick-icon-sheen) 0%, transparent 100%);
+        box-shadow:
+            inset 0 2px 3px var(--color-pick-shadow-active),
+            inset 0 -1px 0 var(--color-pick-icon-border);
     }
 
     .pick-button.pick-button:disabled {
-        color: var(--color-text-muted);
-        background: var(--color-button-secondary);
-        border-color: var(--color-button-secondary-border);
+        --color-pick-gloss-start: var(--color-pick-disabled-gloss-start);
+        --color-pick-gloss-end: var(--color-pick-disabled-gloss-end);
+
+        color: var(--color-pick-disabled-text);
+        background:
+            radial-gradient(ellipse 80% 55% at 50% 108%, var(--color-pick-disabled-bounce), transparent 80%),
+            linear-gradient(
+                180deg,
+                color-mix(in srgb, var(--color-pick-disabled-bg), white 10%) 0%,
+                var(--color-pick-disabled-bg) 40%,
+                color-mix(in srgb, var(--color-pick-disabled-bg), black 4%) 52%,
+                color-mix(in srgb, var(--color-pick-disabled-bg), black 9%) 100%
+            );
+        border-color: var(--color-pick-disabled-border);
         box-shadow: var(--pick-shadow);
         opacity: 1;
         text-shadow: none;
@@ -251,14 +295,19 @@
         width: 48px;
         height: 48px;
         place-items: center;
-        background: var(--color-pick-icon-bg);
+        background-color: var(--color-pick-icon-bg);
+        background-image: linear-gradient(180deg, var(--color-pick-icon-sheen) 0%, transparent 100%);
         border: 1px solid var(--color-pick-icon-border);
         border-radius: 14px;
+        box-shadow:
+            inset 0 1px 0 var(--color-pick-gloss-start),
+            inset 0 -1px 0 var(--color-pick-shadow-inset);
     }
 
     .pick-icon :deep(svg) {
         width: 24px;
         height: 24px;
+        filter: drop-shadow(0 1px 1px var(--color-pick-text-shadow));
     }
 
     .pick-copy {
@@ -282,13 +331,17 @@
     }
 
     .pick-button:disabled .pick-icon {
-        color: var(--color-text-muted);
-        background: var(--color-hover);
-        border-color: var(--color-border);
+        color: var(--color-pick-disabled-text);
+        background-color: var(--color-pick-disabled-icon-bg);
+        border-color: var(--color-pick-disabled-icon-border);
+    }
+
+    .pick-button:disabled .pick-icon :deep(svg) {
+        filter: none;
     }
 
     .pick-button:disabled .pick-caption {
-        color: var(--color-text-muted);
+        color: var(--color-pick-disabled-text);
     }
 
     .visually-hidden {

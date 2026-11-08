@@ -25,15 +25,25 @@
     --color-pick-gradient-start: #218766;
     --color-pick-gradient-middle: #0c7252;
     --color-pick-gradient-end: #086148;
+    --color-pick-bounce: rgb(70 230 160 / 38%);
     --color-pick-border: #08664b;
     --color-pick-highlight: rgb(255 255 255 / 35%);
-    --color-pick-gloss-start: rgb(255 255 255 / 32%);
-    --color-pick-gloss-end: rgb(255 255 255 / 18%);
+    --color-pick-gloss-start: rgb(255 255 255 / 38%);
+    --color-pick-gloss-end: rgb(255 255 255 / 7%);
+    --color-pick-disabled-bg: var(--color-button-secondary);
+    --color-pick-disabled-border: var(--color-button-secondary-border);
+    --color-pick-disabled-text: #a6a6a6;
+    --color-pick-disabled-icon-bg: var(--color-hover);
+    --color-pick-disabled-icon-border: var(--color-border);
+    --color-pick-disabled-gloss-start: rgb(255 255 255 / 36%);
+    --color-pick-disabled-gloss-end: rgb(255 255 255 / 8%);
+    --color-pick-disabled-bounce: rgb(255 255 255 / 22%);
     --color-pick-shadow-inset: rgb(0 40 28 / 18%);
     --color-pick-shadow-active: rgb(0 40 28 / 30%);
     --color-pick-highlight-active: rgb(255 255 255 / 20%);
     --color-pick-text-shadow: rgb(0 42 27 / 35%);
     --color-pick-icon-bg: rgb(255 255 255 / 12%);
+    --color-pick-icon-sheen: rgb(255 255 255 / 20%);
     --color-pick-icon-border: rgb(255 255 255 / 25%);
     --color-pick-caption: rgb(255 255 255 / 88%);
     --color-swatch-border: rgb(0 0 0 / 20%);
@@ -64,6 +74,14 @@
     --color-focus: #1D9E75;
     --color-button-secondary: #e5e7eb;
     --color-button-secondary-border: #9ca3af;
+    --color-pick-disabled-bg: #bdc7be;
+    --color-pick-disabled-border: #87958a;
+    --color-pick-disabled-text: #3f4e43;
+    --color-pick-disabled-icon-bg: #aab8ad;
+    --color-pick-disabled-icon-border: #87958a;
+    --color-pick-disabled-gloss-start: rgb(255 255 255 / 44%);
+    --color-pick-disabled-gloss-end: rgb(255 255 255 / 10%);
+    --color-pick-disabled-bounce: rgb(255 255 255 / 30%);
 }
 
 *,
