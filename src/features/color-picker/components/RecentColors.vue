@@ -33,7 +33,7 @@
 
 <style scoped>
     .recent-colors {
-        padding-top: 10px;
+        padding-top: var(--section-spacing);
         border-top: 1px solid var(--color-border);
     }
 

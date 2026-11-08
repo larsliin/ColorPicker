@@ -109,7 +109,7 @@
         flex-direction: column;
         gap: 8px;
         padding: 0;
-        padding-top: 10px;
+        padding-top: var(--section-spacing);
         border-top: 1px solid var(--color-border);
     }
 

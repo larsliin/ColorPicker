@@ -36,16 +36,15 @@
 
         <section class="popup-content" aria-label="Color picker">
             <BaseAlert
-                v-if="!isEyeDropperAvailable"
+                v-if="!isPicking && !isEyeDropperAvailable"
                 variant="warning"
                 message="Color picking requires a recent desktop version of Chrome."
             />
-            <BaseAlert v-if="errorMessage" :message="errorMessage" />
-            <BaseAlert v-if="copyErrorMessage" :message="copyErrorMessage" />
+            <BaseAlert v-if="!isPicking && errorMessage" :message="errorMessage" />
+            <BaseAlert v-if="!isPicking && copyErrorMessage" :message="copyErrorMessage" />
 
             <BaseButton
                 class="pick-button"
-                :class="{ 'is-picking': isPicking }"
                 :disabled="isPicking || !isEyeDropperAvailable"
                 :aria-label="isPicking ? 'Picking a color from the screen' : 'Pick a color from the screen'"
                 :title="isPicking ? 'Picking color…' : 'Start screen-wide color picker'"
@@ -68,9 +67,11 @@
                 </span>
             </BaseButton>
 
-            <p class="visually-hidden" role="status" aria-live="polite">{{ statusMessage }}</p>
+            <p class="visually-hidden" role="status" aria-live="polite">
+                {{ isPicking ? 'Color picker active. Select a pixel or press Escape to cancel.' : statusMessage }}
+            </p>
 
-            <div class="selection-layout" :class="{ 'empty-state-layout': !selectedColor }">
+            <div v-show="!isPicking" class="selection-layout" :class="{ 'empty-state-layout': !selectedColor }">
                 <SelectedColor
                     :selected-color="selectedColor"
                     :copied-format="copiedFormat"
@@ -155,9 +156,11 @@
     }
 
     .selection-layout {
+        --section-spacing: 8px;
+
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--section-spacing);
     }
 
     .pick-button {
@@ -226,18 +229,9 @@
         color: var(--color-text-muted);
         background: var(--color-button-secondary);
         border-color: var(--color-button-secondary-border);
-        box-shadow: none;
-        opacity: 1;
-        text-shadow: none;
-    }
-
-    .pick-button.pick-button.is-picking:disabled {
-        color: var(--color-white);
-        background: var(--pick-surface);
-        border-color: var(--color-pick-border);
         box-shadow: var(--pick-shadow);
         opacity: 1;
-        text-shadow: 0 1px 2px var(--color-pick-text-shadow);
+        text-shadow: none;
     }
 
     .pick-button.pick-button:focus-visible {
@@ -287,13 +281,13 @@
         line-height: 1.35;
     }
 
-    .pick-button:disabled:not(.is-picking) .pick-icon {
+    .pick-button:disabled .pick-icon {
         color: var(--color-text-muted);
         background: var(--color-hover);
         border-color: var(--color-border);
     }
 
-    .pick-button:disabled:not(.is-picking) .pick-caption {
+    .pick-button:disabled .pick-caption {
         color: var(--color-text-muted);
     }
 

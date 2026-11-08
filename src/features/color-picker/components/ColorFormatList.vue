@@ -36,7 +36,7 @@
 
 <style scoped>
     .formats-section {
-        padding-top: 10px;
+        padding-top: var(--section-spacing);
         padding-left: 0;
         padding-right: 0;
         border-top: 1px solid var(--color-border);
