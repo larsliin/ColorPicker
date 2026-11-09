@@ -158,6 +158,11 @@
     .palette-copy-btn {
         position: absolute;
         inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
         width: 100%;
         height: 100%;
         padding: 0;
@@ -169,12 +174,9 @@
     }
 
     .palette-copy-btn svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
+        flex: 0 0 auto;
         width: 14px;
         height: 14px;
-        transform: translate(-50%, -50%);
     }
 
     .palette-copy-btn:focus-visible {
@@ -183,16 +185,13 @@
     }
 
     .palette-color-hex {
-        position: absolute;
-        left: 50%;
-        bottom: 4px;
+        flex: 0 0 auto;
         padding: 1px 2px;
         color: inherit;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 10px;
         font-weight: 600;
         line-height: 1.2;
-        transform: translateX(-50%);
         white-space: nowrap;
         pointer-events: none;
     }

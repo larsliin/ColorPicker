@@ -11,19 +11,6 @@ interface EyeDropperInstance {
 
 type EyeDropperConstructor = new () => EyeDropperInstance;
 
-interface PickInputDiagnostic {
-    type: string;
-    trusted: boolean;
-    userActivation: boolean | null;
-    focused: boolean;
-    visibility: string;
-    detail: number;
-    pointerType: string | null;
-    timeStamp: number;
-    isPicking: boolean;
-    msSincePreviousPick: number | null;
-}
-
 const eyeDropper = (window as Window & { EyeDropper?: EyeDropperConstructor }).EyeDropper;
 const MAX_RECENT_COLORS = 16;
 const EYEDROPPER_RETRY_DELAY_MS = 100;
@@ -43,8 +30,6 @@ export function useColorPicker() {
     let storageLoaded = false;
     let pendingHistoryColors: string[] = [];
     let persistenceQueue = Promise.resolve();
-    let pickInputEvents: PickInputDiagnostic[] = [];
-    let previousPickSettledAt: number | null = null;
 
     function getExtensionStorage() {
         if (typeof chrome === 'undefined' || !chrome.storage?.local) {
@@ -181,25 +166,6 @@ export function useColorPicker() {
         setSelectedColor(value, false);
     }
 
-    function logPickInput(event: MouseEvent) {
-        const diagnostic: PickInputDiagnostic = {
-            type: event.type,
-            trusted: event.isTrusted,
-            userActivation: navigator.userActivation?.isActive ?? null,
-            focused: document.hasFocus(),
-            visibility: document.visibilityState,
-            detail: event.detail,
-            pointerType: event instanceof PointerEvent ? event.pointerType : null,
-            timeStamp: Math.round(event.timeStamp),
-            isPicking: isPicking.value,
-            msSincePreviousPick: previousPickSettledAt === null
-                ? null
-                : Math.round(performance.now() - previousPickSettledAt),
-        };
-        pickInputEvents = [...pickInputEvents, diagnostic].slice(-8);
-        console.info(`[ColorPicker] Pick input: ${JSON.stringify(diagnostic)}`);
-    }
-
     async function openEyeDropper(EyeDropperApi: EyeDropperConstructor): Promise<EyeDropperResult> {
         try {
             return await new EyeDropperApi().open();
@@ -213,20 +179,16 @@ export function useColorPicker() {
             // page still reports user activation. Waiting briefly and retrying once, within the same
             // gesture, covers the case where the browser had not yet registered that activation.
             // Cancellation (AbortError) and missing activation (NotAllowedError) are never retried.
-            console.warn('[ColorPicker] EyeDropper unavailable; retrying once.');
             await new Promise((resolve) => setTimeout(resolve, EYEDROPPER_RETRY_DELAY_MS));
             return await new EyeDropperApi().open();
         }
     }
 
-    async function pickColor(event: MouseEvent) {
-        logPickInput(event);
+    async function pickColor() {
         if (isPicking.value) {
             return;
         }
 
-        const inputEvents = pickInputEvents;
-        pickInputEvents = [];
         errorMessage.value = '';
         copyErrorMessage.value = '';
         statusMessage.value = '';
@@ -236,11 +198,17 @@ export function useColorPicker() {
             return;
         }
 
+        // Chrome grants user activation on press and expires it after ~5 seconds, so a long press
+        // reaches this click without it and EyeDropper.open() would reject. Treat it as a cancelled press.
+        if (navigator.userActivation && !navigator.userActivation.isActive) {
+            statusMessage.value = 'Press was held too long. Click again to pick a color.';
+            return;
+        }
+
         isPicking.value = true;
 
         try {
             const result = await openEyeDropper(eyeDropper);
-            console.info('[ColorPicker] EyeDropper selection completed.');
             const color = normalizeHexColor(result.sRGBHex);
             if (!color) {
                 throw new Error('The eyedropper returned an invalid color.');
@@ -249,21 +217,16 @@ export function useColorPicker() {
             selectColor(color);
         } catch (error) {
             if (error instanceof DOMException && error.name === 'AbortError') {
-                console.info('[ColorPicker] EyeDropper selection cancelled.');
                 statusMessage.value = 'Color selection cancelled.';
                 return;
             }
 
-            console.error(
-                `Failed to pick a color: ${String(error)}. [ColorPicker] Recent pick input: ${JSON.stringify(inputEvents)}`,
-                error,
-            );
+            console.error('Failed to pick a color:', error);
             errorMessage.value = error instanceof DOMException && error.name === 'OperationError'
                 ? 'Chrome could not open the color picker. Please click Pick to try again.'
                 : 'Could not pick a color. Please try again.';
         } finally {
             isPicking.value = false;
-            previousPickSettledAt = performance.now();
         }
     }
 
@@ -293,7 +256,6 @@ export function useColorPicker() {
         formats,
         isEyeDropperAvailable,
         isPicking: readonly(isPicking),
-        logPickInput,
         pickColor,
         recentColors: readonly(recentColors),
         selectColor,

@@ -17,7 +17,6 @@
         formats,
         isEyeDropperAvailable,
         isPicking,
-        logPickInput,
         pickColor,
         recentColors,
         selectColor,
@@ -49,9 +48,6 @@
                 :disabled="isPicking || !isEyeDropperAvailable"
                 :aria-label="isPicking ? 'Picking a color from the screen' : 'Pick a color from the screen'"
                 :title="isPicking ? 'Picking color…' : 'Start screen-wide color picker'"
-                @pointerdown="logPickInput"
-                @mousedown="logPickInput"
-                @pointerup="logPickInput"
                 @click="pickColor"
             >
                 <span class="pick-icon" aria-hidden="true">
