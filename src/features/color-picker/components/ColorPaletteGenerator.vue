@@ -19,7 +19,7 @@
     const props = defineProps<Props>();
     const emit = defineEmits<Emits>();
 
-    const selectedMode = ref<SchemeMode>('triad');
+    const selectedMode = ref<SchemeMode>('monochrome');
     const paletteColors = computed(() => generateColorScheme(props.selectedColor, selectedMode.value));
     const displayColors = computed(() => paletteColors.value.map((hex) => ({
         hex,
