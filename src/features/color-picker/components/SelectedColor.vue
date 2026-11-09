@@ -76,20 +76,18 @@
             </label>
             <div class="selected-copy">
                 <span class="selected-label">Current color · HEX</span>
-                <div class="selected-value-row">
-                    <span class="selected-value" :class="{ 'is-empty': !selectedColor }">{{ selectedColor || 'No color selected' }}</span>
-                    <BaseButton
-                        v-if="selectedColor"
-                        variant="outline"
-                        class="hex-copy"
-                        :aria-label="copiedFormat === 'HEX'
-                            ? 'HEX value copied to clipboard'
-                            : `Copy HEX value ${selectedColor}`"
-                        @click="emit('copy', selectedColor)"
-                    >
-                        {{ copiedFormat === 'HEX' ? 'Copied' : 'Copy' }}
-                    </BaseButton>
-                </div>
+                <span class="selected-value" :class="{ 'is-empty': !selectedColor }">{{ selectedColor || 'No color selected' }}</span>
+                <BaseButton
+                    v-if="selectedColor"
+                    variant="outline"
+                    class="hex-copy"
+                    :aria-label="copiedFormat === 'HEX'
+                        ? 'HEX value copied to clipboard'
+                        : `Copy HEX value ${selectedColor}`"
+                    @click="emit('copy', selectedColor)"
+                >
+                    {{ copiedFormat === 'HEX' ? 'Copied' : 'Copy HEX' }}
+                </BaseButton>
             </div>
         </div>
     </section>
@@ -110,14 +108,14 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        min-height: 52px;
+        min-height: 85px;
     }
 
     .color-preview {
         position: relative;
-        flex: 0 0 52px;
-        width: 52px;
-        height: 52px;
+        flex: 0 0 85px;
+        width: 85px;
+        height: 85px;
         cursor: pointer;
     }
 
@@ -147,11 +145,11 @@
 
     .color-edit-indicator {
         position: absolute;
-        right: 4px;
-        bottom: 4px;
+        right: 6px;
+        bottom: 6px;
         display: grid;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         place-items: center;
         color: var(--color-white);
         background: var(--color-edit-indicator-bg);
@@ -161,8 +159,8 @@
     }
 
     .color-edit-indicator svg {
-        width: 11px;
-        height: 11px;
+        width: 12px;
+        height: 12px;
     }
 
     .color-picker-input:focus-visible + .color-preview-swatch {
@@ -175,7 +173,7 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
     }
 
     .selected-label {
@@ -184,12 +182,6 @@
         font-weight: 600;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-    }
-
-    .selected-value-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
 
     .selected-value {
@@ -210,7 +202,7 @@
     }
 
     .hex-copy {
-        flex: 0 0 auto;
-        width: 64px;
+        align-self: flex-start;
+        width: 88px;
     }
 </style>
