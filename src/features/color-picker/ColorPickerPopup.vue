@@ -30,9 +30,7 @@
 
 <template>
     <main class="popup-shell">
-        <header class="popup-header">
-            <h1>Color Picker</h1>
-        </header>
+        <h1 class="visually-hidden">Color Picker</h1>
 
         <section class="popup-content" aria-label="Color picker">
             <BaseAlert
@@ -116,27 +114,12 @@
         background: var(--color-bg);
     }
 
-    .popup-header {
-        display: flex;
-        align-items: center;
-        margin: 8px 16px 0;
-        padding: 0 0 8px;
-        border-bottom: 1px solid var(--color-border);
-    }
-
-    .popup-header h1 {
-        color: var(--color-text);
-        font-size: 17px;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-
     .popup-content {
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        padding: 10px 16px 16px;
+        padding: 16px;
     }
 
     .empty-state {
