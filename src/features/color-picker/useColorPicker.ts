@@ -162,6 +162,10 @@ export function useColorPicker() {
         setSelectedColor(value, true);
     }
 
+    function updateSelectedColor(value: string) {
+        setSelectedColor(value, false);
+    }
+
     function selectRecentColor(value: string) {
         setSelectedColor(value, false);
     }
@@ -262,5 +266,6 @@ export function useColorPicker() {
         selectRecentColor,
         selectedColor: readonly(selectedColor),
         statusMessage: readonly(statusMessage),
+        updateSelectedColor,
     };
 }

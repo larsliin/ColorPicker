@@ -12,8 +12,8 @@
 </script>
 
 <template>
-    <section class="recent-colors" aria-label="Recent colors">
-        <h2>Recent colors</h2>
+    <section class="recent-colors" aria-label="Recently picked colors">
+        <h2>Recently picked colors</h2>
         <div class="color-grid">
             <BaseButton
                 v-for="color in props.colors"

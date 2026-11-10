@@ -19,10 +19,10 @@
         isPicking,
         pickColor,
         recentColors,
-        selectColor,
         selectRecentColor,
         selectedColor,
         statusMessage,
+        updateSelectedColor,
     } = useColorPicker();
 
     const secondaryFormats = computed(() => formats.value.filter((format) => format.name !== 'HEX'));
@@ -73,7 +73,7 @@
                 <SelectedColor
                     :selected-color="selectedColor"
                     :copied-format="copiedFormat"
-                    @select="selectColor"
+                    @select="updateSelectedColor"
                     @copy="copyFormat('HEX', $event)"
                 />
 
