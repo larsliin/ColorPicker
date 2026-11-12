@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import BaseButton from '@/components/base/BaseButton.vue';
+    import { BaseButton } from 'chrome-extension-component-library';
     import type { ColorFormat } from '../types';
 
     defineProps<{

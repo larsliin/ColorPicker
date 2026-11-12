@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
-    import BaseButton from '@/components/base/BaseButton.vue';
+    import { BaseButton } from 'chrome-extension-component-library';
 
     defineProps<{
         selectedColor: string;
@@ -79,7 +79,8 @@
                 <span class="selected-value" :class="{ 'is-empty': !selectedColor }">{{ selectedColor || 'No color selected' }}</span>
                 <BaseButton
                     v-if="selectedColor"
-                    variant="outline"
+                    variant="secondary"
+                    size="small"
                     class="hex-copy"
                     :aria-label="copiedFormat === 'HEX'
                         ? 'HEX value copied to clipboard'

@@ -14,6 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chrome-extension-component-library": "github:larsliin/ChromeExtensionsComponentLibrary#main",
     "vue": "^3.5.44"
   },
   "devDependencies": {

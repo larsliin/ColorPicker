@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
-    import BaseButton from '@/components/base/BaseButton.vue';
-    import BaseSelect from '@/components/base/BaseSelect.vue';
+    import { BaseButton, BaseSelect } from 'chrome-extension-component-library';
+    import type { SelectOption } from 'chrome-extension-component-library';
     import type { SchemeMode } from '../utils/colorPalette';
     import { generateColorScheme } from '../utils/colorPalette';
     import { getContrastColor } from '../utils/colorFormats';
@@ -26,7 +26,7 @@
         overlayColor: getContrastColor(hex),
     })));
 
-    const schemeOptions: Array<{ value: SchemeMode; label: string }> = [
+    const schemeOptions: SelectOption<SchemeMode>[] = [
         { value: 'monochrome', label: 'Monochrome' },
         { value: 'monochrome-dark', label: 'Monochrome Dark' },
         { value: 'monochrome-light', label: 'Monochrome Light' },
@@ -53,11 +53,7 @@
         <div class="palette-controls">
             <label for="scheme-mode" class="palette-label">Theme:</label>
             <div class="palette-select">
-                <BaseSelect id="scheme-mode" v-model="selectedMode">
-                    <option v-for="option in schemeOptions" :key="option.value" :value="option.value">
-                        {{ option.label }}
-                    </option>
-                </BaseSelect>
+                <BaseSelect id="scheme-mode" v-model="selectedMode" :options="schemeOptions" />
             </div>
         </div>
 
@@ -95,7 +91,7 @@
             </div>
 
             <div class="palette-actions">
-                <BaseButton variant="outline" aria-live="polite" @click="copyAllColors">
+                <BaseButton variant="secondary" size="small" aria-live="polite" @click="copyAllColors">
                     {{ copiedFormat === 'Theme' ? 'Colors copied' : 'Copy all colors' }}
                 </BaseButton>
             </div>
