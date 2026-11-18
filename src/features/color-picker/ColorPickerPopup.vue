@@ -155,9 +155,10 @@
     }
 
     .hero-title {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 700;
         line-height: 1.25;
+        opacity: 0.85;
     }
 
     .hero-caption {
@@ -165,6 +166,7 @@
         font-weight: 500;
         line-height: 1.35;
         color: var(--color-hero-caption);
+        opacity: 0.85;
     }
 
     .color-pick-button:disabled .hero-caption {
