@@ -59,7 +59,7 @@
                             isPicking
                                 ? 'Select a pixel anywhere · Press Escape to cancel'
                                 : isEyeDropperAvailable
-                                    ? 'Click to start · Sample colors across your entire screen'
+                                    ? 'Click to start · Pick any screen color'
                                     : 'Unavailable in this version of Chrome'
                         }}
                     </span>
